@@ -5,7 +5,6 @@ function ImageGallery() {
     const [images, setImages] = useState([]);
     const [error, setError] = useState('');
 
-
     // Fetch tags from backend when component mounts
     useEffect(() => {
         const fetchTags = async () => {
@@ -35,9 +34,7 @@ function ImageGallery() {
                 body: JSON.stringify({ tag: tagName }), // Sending tag as JSON body
             });
             const data = await response.json();
-            console.log("chalega");
 
-            console.log(data);
             if (response.ok) {
                 setImages(data.data.images); // Set images from the response
                 setError('');
@@ -60,10 +57,14 @@ function ImageGallery() {
     };
 
     return (
-        <div>
-            <div>
+        <div className='max-h-screen overflow-y-auto w-full content-betweeen bg-gradient-to-r from-slate-900 to-slate-700 mt-24 m-3 p-3 rounded-lg'>
+            <div className='flex text-white text-md justify-center gap-5'>
                 {tags.map((tag, index) => (
-                    <button key={index} onClick={() => fetchImagesByTag(tag)}>
+                    <button
+                        key={index}
+                        className='p-3 hover:bg-gray-500 rounded-full font-thin bg-gray-700 shadow-lg border border-blue-300'
+                        onClick={() => fetchImagesByTag(tag)}
+                    >
                         {tag}
                     </button>
                 ))}
@@ -71,31 +72,27 @@ function ImageGallery() {
 
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                gap: '10px',
-                marginTop: '20px',
-            }}>
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                    gap: '10px',
+                    marginTop: '20px',
+                    padding: '3px',
+                }}
+            >
                 {images.map((img, index) => (
                     <img
                         key={index}
                         src={img}
                         alt={`Image ${index + 1}`}
-                        style={{
-                            width: '100%', // Set to 100% of grid cell width
-                            height: 'auto', // Adjust height automatically to maintain aspect ratio
-                            borderRadius: '5px',
-                            objectFit: 'cover',
-                            aspectRatio: '1 / 1', // Maintain a 1:1 aspect ratio
-                        }}
+                        loading="lazy"  // Add the loading attribute for lazy loading
+                        className='w-full h-auto rounded-md object-cover aspect-[1/1]'
                     />
                 ))}
             </div>
-
         </div>
     );
 }
-
 
 export default ImageGallery;
